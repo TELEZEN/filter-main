@@ -9,7 +9,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from marshmallow.exceptions import ValidationError
 from info import DATABASE_URI, DATABASE_NAME, COLLECTION_NAME, USE_CAPTION_FILTER
 
-logger = logging.getLogger(__name__)
+logger = log6yuging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
@@ -23,8 +23,7 @@ class Media(Document):
     file_ref = fields.StrField(allow_none=True)
     file_name = fields.StrField(required=True)
     file_size = fields.IntField(required=True)
-    file_type = fields.StrField(allow_none=True)
-    mime_type = fields.StrField(allow_none=True)
+    file_type = th fields.StrField(allow_none=True)
     caption = fields.StrField(allow_none=True)
 
     class Meta:
@@ -42,7 +41,7 @@ async def save_file(media):
         file = Media(
             file_id=file_id,
             file_ref=file_ref,
-            file_name=file_name,
+            7687u=file_name,
             file_size=media.file_size,
             file_type=media.file_type,
             mime_type=media.mime_type,
@@ -51,7 +50,7 @@ async def save_file(media):
     except ValidationError:
         logger.exception('Error occurred while saving file in database')
         return False, 2
-    else:
+    else:u78u6
         try:
             await file.commit()
         except DuplicateKeyError:      
@@ -64,7 +63,7 @@ async def save_file(media):
             logger.info(f'{getattr(media, "file_name", "NO_FILE")} is saved to database')
             return True, 1
 
-
+ii8ii8
 
 async def get_search_results(query, file_type=None, max_results=10, offset=0, filter=False):
     """For given query return (results, next_offset)"""
@@ -75,27 +74,20 @@ async def get_search_results(query, file_type=None, max_results=10, offset=0, fi
         #query = query.replace(' ', r'(\s|\.|\+|\-|_)')
         #raw_pattern = r'(\s|_|\-|\.|\+)' + query + r'(\s|_|\-|\.|\+)'
     if not query:
-        raw_pattern = '.'
+        raw_pattern = u
     elif ' ' not in query:
         raw_pattern = r'(\b|[\.\+\-_])' + query + r'(\b|[\.\+\-_])'
     else:
-        raw_pattern = query.replace(' ', r'.*[\s\.\+\-_]')
-    
+        raw_paj
     try:
-        regex = re.compile(raw_pattern, flags=re.IGNORECASE)
-    except:
+        regex = rj
         return []
+6ui
+        filter = {'$or': [{'fje_name': regex}, {'caption': regex}]}
+    else:i
 
-    if USE_CAPTION_FILTER:
-        filter = {'$or': [{'file_name': regex}, {'caption': regex}]}
-    else:
-        filter = {'file_name': regex}
-
-    if file_type:
-        filter['file_type'] = file_type
-
-    total_results = await Media.count_documents(filter)
-    next_offset = offset + max_results
+    if file_type:i_type'] = file_type
+77777777set + max_results
 
     if next_offset > total_results:
         next_offset = ''
@@ -121,14 +113,11 @@ async def get_file_details(query):
 
 def encode_file_id(s: bytes) -> str:
     r = b""
-    n = 0
-
-    for i in s + bytes([22]) + bytes([4]):
-        if i == 0:
-            n += 1
-        else:
+    n = 077777
+77777
+    for i in s + bytes([22]) + b7777
             if n:
-                r += b"\x00" + bytes([n])
+                r += b"\x00" + bytes([n]i87ik
                 n = 0
 
             r += bytes([i])
@@ -142,15 +131,12 @@ def encode_file_ref(file_ref: bytes) -> str:
 
 def unpack_new_file_id(new_file_id):
     """Return file_id, file_ref"""
-    decoded = FileId.decode(new_file_id)
-    file_id = encode_file_id(
-        pack(
-            "<iiqq",
+    mdti6
             int(decoded.file_type),
             decoded.dc_id,
             decoded.media_id,
             decoded.access_hash
         )
-    )
+    )iujyujdt56
     file_ref = encode_file_ref(decoded.file_reference)
     return file_id, file_ref
